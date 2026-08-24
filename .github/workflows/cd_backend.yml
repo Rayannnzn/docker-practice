@@ -4,7 +4,7 @@ on:
     branches: [ main ]
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #A Github Action Tempalte that Runs the Job on Ubuntu Latest Machine.
     steps:
       - uses: actions/checkout@v2    #A Github Action Tempalte that Clones Code in github Ubuntu Machine.
   
