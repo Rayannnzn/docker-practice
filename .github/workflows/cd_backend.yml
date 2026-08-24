@@ -26,13 +26,15 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         env:
           IMAGE_TAG: ${{ github.sha }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: IMAGE_TAG
+          envs: IMAGE_TAG,DATABASE_URL
+          script_stop: true
           script: |
-            docker pull rayannz/user-app-backend:$IMAGE_TAG
-            docker stop user-app-backend || true
-            docker rm user-app-backend || true
-            docker run -d -e DATABASE_URL=${{ secrets.DATABASE_URL }} --name user-app-backend -p 8080:8080 --restart unless-stopped rayannz/user-app-backend:$IMAGE_TAG
+            sudo docker pull rayannz/user-app-backend:$IMAGE_TAG
+            sudo docker stop user-app-backend || true
+            sudo docker rm user-app-backend || true
+            sudo docker run -d --name user-app-backend -p 8080:8080 --restart unless-stopped -e DATABASE_URL="$DATABASE_URL" rayannz/user-app-backend:$IMAGE_TAG
